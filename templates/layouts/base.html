@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Listing</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel="stylesheet" href="{% static "/css/bootstrap.css" %}">
+	<script src="{% static "/js/bootstrap.js" %}"></script>
+</head>
+<body class="m-0">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+		<div class="container-fluid d-flex justify-content-between">
+			<div class="navbar-brand ms-3" href="{% url "index" %}"> RUQuesT</div>
+			<ul class="navbar-nav mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="{% url "index" %}">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url "ask" %}">Ask</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+				</li>
+			</ul>
+
+			<form class="d-flex" role="search">
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-danger" type="submit">Search</button>
+			</form>
+			<div class="d-flex align-items-center">
+				<div class="me-3 ">
+					<img width="50px" src="{% static "/img/PELMEN.PNG" %}" class="img-thumbnail" alt="...">
+				</div>
+				<div class="content">
+					<div class="content_name">Dr name</div>
+					<div class="content_links">
+						<a href="{% url "settings" %}">Settings</a>
+						<a href="#">Log out</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<main class="container-fluid d-flex">
+
+		<div class="col">
+			{% block content %}
+            {% endblock %}
+		</div>
+
+		<aside class="col-2 vh-100">
+			{% include "layouts/tags.html" %}
+
+			<div class="ms-1">
+				<h4>Best membars</h4>
+				<div class="ms-4">
+					<a href="#" class="d-block">name1</a>
+					<a href="#" class="d-block">name2</a>
+					<a href="#" class="d-block">name3</a>
+					<a href="#" class="d-block">name4</a>
+					<a href="#" class="d-block">name6</a>
+					<a href="#" class="d-block">name7</a>
+					<a href="#" class="d-block">name8</a>
+				</div>
+			</div>
+		</aside>
+	</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="card mb-3">
+    <div class="card-body row">
+        <div class="col-2 border-end">
+            <img src="{% static question.img_path %}" class="img-thumbnail m-3 ms-0" alt="...">
+        </div>
+        <div class="col">
+            <h5 class="card-title">{{ question.title }}</h5>
+            <p class="card-text">{{ question.text }}</p>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <a href="{% url "question" question.id %}" class="btn btn-primary ">Answers</a>
+                </div>
+                <div class="col align-items-center gap-10">
+                    <span>Tags:</span>
+                    {% for tag in question.tags %}
+                        <span class="badge rounded-pill bg-secondary">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <p class="card-text"><small class="text-body-secondary">Last updated {{ question.posted }} ago</small></p>
+        </div>
+    </div>
+</div>

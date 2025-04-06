@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+			<div class="container col-12 col-md-8">
+				<div class="registration-card bg-white p-4 p-md-5">
+					<h2 class="text-center mb-4">Авторизация</h2>
+					<form>
+						<div class="mb-3 d-flex align-items-center">
+							<label for="login" class="form-label me-3">Login</label>
+							<input type="text" class="form-control" id="login" required>
+						</div>
+	
+						
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="password" class="form-label">Пароль</label>
+								<input type="password" class="form-control" id="password" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="confirmPassword" class="form-label">Подтвердите пароль</label>
+								<input type="password" class="form-control" id="confirmPassword" required>
+							</div>
+						</div>
+						
+						<h5 class="text-danger">error</h5>
+						<button type="submit" class="btn btn-primary w-100">Войти</button>
+	
+						<p class="text-center mt-3">
+							Еще нет аккаунта? <a href="{% url "signup" %}" class="text-decoration-none">Зарегистрироваться</a>
+						</p>
+					</form>
+				</div>
+			</div>
+{% endblock %}
