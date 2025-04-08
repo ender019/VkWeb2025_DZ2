@@ -1,20 +1,8 @@
-import copy
 from random import randint
 
 from django.core.paginator import Paginator
 from django.shortcuts import render
-
-QUESTIONS = [
-    {
-        "id": i,
-        "title": f"question #{i}",
-        "img_path": "/img/PELMEN.PNG",
-        "text": "question " * (i + 1) + str(i),
-        "tags": [f"t{i}", "tag"],
-        "posted": f"{(i * 13) % 60 + 1} minutes",
-        "comments": [i for i in range(randint(1, 10))]
-    } for i in range(100)
-]
+from app.models import Question, Tag, Profile
 
 
 def paginate(objects_list: list, request, per_page=10, pag_size=7):
@@ -31,57 +19,101 @@ def paginate(objects_list: list, request, per_page=10, pag_size=7):
 
 # Create your views here.
 def index(request):
-    pagination = paginate(QUESTIONS, request, 5)
+    profile = Profile.objects.first()
+    questions = Question.objects.get_listing()
+    pagination = paginate(questions, request, 5)
     return render(request, 'index.html',
                   context={
+                      "profile": profile,
                       **pagination,
-                      "head": ["New questions", "Hot questions", "hot"]
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                      "head": ["List of questions", "Hot questions", "hot"]
                   }
             )
 
 
 def hot(request):
-    pagination = paginate(QUESTIONS[::-1], request, 5)
+    profile = Profile.objects.first()
+    questions = Question.objects.get_hot()
+    pagination = paginate(questions, request, 5)
     return render(request, 'index.html',
                   context={
+                      "profile": profile,
                       **pagination,
-                      "head": ["New questions", "List questions", "index"]
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                      "head": ["Hot questions", "List of questions", "hot"]
                   }
             )
 
 
 def tag(request, name):
-    return render(request, 'question.html',
+    profile = Profile.objects.first()
+    questions = Question.objects.get_by_tag(name)
+    pagination = paginate(questions, request, 5)
+    return render(request, 'index.html',
                   context={
-                      "question": list(filter(lambda x: name in x["tags"], QUESTIONS))[0],
-                      "head": ["New questions", "List questions", "index"]
+                      "profile": profile,
+                      **pagination,
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                      "head": [name, "List of questions", "index"]
                   }
             )
 
 
 def question(request, question_id):
-    question = list(filter(lambda x: x["id"] == question_id, QUESTIONS))[0]
-    pagination = paginate(question["comments"], request, 5)
+    profile = Profile.objects.first()
+    quest = Question.objects.get(pk=question_id)
+    pagination = paginate(quest.answer_set.all(), request, 5)
     return render(request, 'question.html',
                   context={
-                      "question": question,
+                      "profile": profile,
+                      "question": quest,
                       **pagination,
-                      "head": ["New questions", "List questions", "index"]
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                      "head": [quest.title, "List questions", "index"]
                   }
             )
 
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'login.html',
+                  context={
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                  }
+            )
 
 
 def signup(request):
-    return render(request, 'signup.html')
+    return render(request, 'signup.html',
+                  context={
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                  }
+            )
 
 
 def ask(request):
-    return render(request, 'ask.html')
+    profile = Profile.objects.first()
+    return render(request, 'ask.html',
+                  context={
+                      "profile": profile,
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                  }
+            )
 
 
 def settings(request):
-    return render(request, 'settings.html')
+    profile = Profile.objects.first()
+    return render(request, 'settings.html',
+                  context={
+                      "profile": profile,
+                      "tags": Tag.objects.get_popular_tags(),
+                      "nicks": Profile.objects.get_most_active(),
+                  }
+            )

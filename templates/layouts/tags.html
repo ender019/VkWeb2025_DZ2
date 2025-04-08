@@ -3,20 +3,8 @@
 <section class="ms-1">
     <h4>Tags</h4>
     <div class="ms-4 gap-3">
-{#        {% for tag in tags %}#}
-{#            <a href="{% url "tag" tag %}" class="badge rounded-pill bg-light text-dark">{{ tag }}</a>#}
-{#        {% endfor %}#}
-        <a href="#" class="badge rounded-pill bg-primary text-dark">tag1</a>
-        <a href="#" class="badge rounded-pill bg-secondary  text-dark">tag2</a>
-        <a href="#" class="badge rounded-pill bg-success">tag3</a>
-        <a href="#" class="badge rounded-pill bg-danger">tad4</a>
-        <a href="#" class="badge rounded-pill bg-warning">tag5</a>
-        <a href="#" class="badge rounded-pill bg-info text-dark">tag6</a>
-        <a href="#" class="badge rounded-pill bg-light text-dark">tag1</a>
-        <a href="#" class="badge rounded-pill bg-dark">tag2</a>
-        <a href="#" class="badge rounded-pill bg-dark">tag3</a>
-        <a href="#" class="badge rounded-pill bg-dark">tad4</a>
-        <a href="#" class="badge rounded-pill bg-dark">tag5</a>
-        <a href="#" class="badge rounded-pill bg-dark">tag6</a>
+        {% for tag in tags %}
+            <a href="{% url "tag" tag %}" class="badge rounded-pill bg-warning text-dark">{{ tag }}</a>
+        {% endfor %}
     </div>
 </section>
