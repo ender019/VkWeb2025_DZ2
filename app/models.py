@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -31,7 +33,7 @@ class Question(models.Model):
 
     title = models.CharField(max_length=100, unique=True)
     text = models.TextField(null=False)
-    posted = models.DateTimeField(auto_now_add=True)
+    posted = models.DateTimeField()
 
     tags = models.ManyToManyField(Tag)
     likes = models.ManyToManyField(Profile)

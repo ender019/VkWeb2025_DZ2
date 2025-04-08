@@ -10,13 +10,17 @@ from random import randint, choices
 
 class Command(BaseCommand):
     help = 'Fills the database'
+    img = ["PELMEN.png", "frog.webp", "volk.jpg", "bird.jpg"]
 
     def add_arguments(self, parser):
         parser.add_argument('ratio', type=int, help='Kol')
 
-    def ranom_str(self, kol=10):
+    def rand_str(self, kol=10) -> str:
         let = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         return "".join(let[randint(0, 51)] for i in range(kol))
+    
+    def rand_date(self) -> datetime:
+        return datetime.now()-timedelta(seconds=randint(1, 10**9))
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -24,24 +28,24 @@ class Command(BaseCommand):
 
         tags = [Tag(id=i, title=f"tag{i}") for i in range(kol)]
         users = [User(
-                username=self.ranom_str(randint(10,50)),
-                email=self.ranom_str(randint(5,20))+"@mail.ru"
+                username=self.rand_str(randint(10,50)),
+                email=self.rand_str(randint(5,20))+"@mail.ru"
             ) for i in range(kol)]
         profiles = [Profile(
-            nickname=self.ranom_str(randint(10,50)),
-            avatar=f"/img/PELMEN.PNG",
+            nickname=self.rand_str(randint(10,50)),
+            avatar=f"/img/{choices(self.img)[0]}",
             user=users[i]
         ) for i in range(kol)]
         questions = [Question(
                 title=f"Question {i}",
                 text="question "*randint(1, 100),
-                posted=datetime.now()-timedelta(seconds=randint(1, 10**9)),
+                posted=self.rand_date(),
                 profile=profiles[randint(0, kol-1)]
             ) for i in range(kol*10)]
         answers = [Answer(
                 text="answer "*randint(1, 10)+str(i),
                 correct=randint(0, 1),
-                posted=datetime.now()-timedelta(seconds=randint(1, 10**9)),
+                posted=self.rand_date(),
                 question=questions[randint(0, 10*kol-1)],
                 profile=profiles[randint(0, kol-1)]
             ) for i in range(kol*100)]
