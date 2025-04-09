@@ -2,7 +2,7 @@ from random import randint
 
 from django.core.paginator import Paginator
 from django.shortcuts import render
-from app.models import Question, Tag, Profile
+from app.models import Question, Tag, Profile, Answer
 
 
 def paginate(objects_list: list, request, per_page=10, pag_size=7):
@@ -65,8 +65,8 @@ def tag(request, name):
 
 def question(request, question_id):
     profile = Profile.objects.first()
-    quest = Question.objects.get(pk=question_id)
-    pagination = paginate(quest.answer_set.all(), request, 5)
+    quest = Question.objects.get_by_id(question_id)
+    pagination = paginate(Answer.objects.get_by_question_id(question_id), request, 5)
     return render(request, 'question.html',
                   context={
                       "profile": profile,

@@ -24,7 +24,7 @@
                     <span>Tags:</span>
                     {% for tag in question.tags.all %}
                         <span class="badge rounded-pill bg-secondary">
-                            <a href="{%  url "tag" tag.title %}" class="text-white">{{ tag.title }}</a>
+                            <a href="{%  url "tag" tag.tag.title %}" class="text-white">{{ tag.tag.title }}</a>
                         </span>
                     {% endfor %}
                 </div>

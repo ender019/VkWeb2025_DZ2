@@ -35,9 +35,6 @@ class Question(models.Model):
     text = models.TextField(null=False)
     posted = models.DateTimeField()
 
-    tags = models.ManyToManyField(Tag)
-    likes = models.ManyToManyField(Profile)
-
     profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name='qst_creator')
 
     class Meta:
@@ -51,10 +48,35 @@ class Answer(models.Model):
     correct = models.BooleanField(default=False)
     posted = models.DateTimeField(auto_now_add=True)
 
-    likes = models.ManyToManyField(Profile)
-
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name='ans_creator')
 
     class Meta:
         db_table = 'answers'
+
+
+class QuestionsLikes(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='likes')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='qst_likes')
+
+    class Meta:
+        db_table = 'questions_likes'
+        unique_together = (('profile', 'question'),)
+
+
+class AnswersLikes(models.Model):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='likes')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='ans_likes')
+
+    class Meta:
+        db_table = 'answers_likes'
+        unique_together = (('profile', 'answer'),)
+
+
+class QuestionsTags(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='tags')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tagged_questions')
+
+    class Meta:
+        db_table = 'questions_tags'
+        unique_together = (('question', 'tag'),)
