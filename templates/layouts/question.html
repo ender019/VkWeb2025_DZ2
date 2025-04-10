@@ -2,13 +2,17 @@
 
 <div class="card mb-3">
     <div class="card-body row">
-        <div class="col-2 border-end">
-            <img src="{% static question.profile.avatar %}" class="img-thumbnail m-3 ms-0" alt="...">
+        <div class="col-2 border-end me-1 row">
+            <img src="{% static question.profile.avatar %}" class="img-thumbnail col m-3 ms-0 mb-0" alt="...">
+            <span class="text-truncate col">{{ question.profile.nickname }}</span>
             <div class="d-flex align-items-center">
-                <span class="text-truncate col-7 me-2">{{ question.profile.nickname }}</span>
-                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                <button type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
                     <span>Like</span>
-                    <span class="badge bg-danger bg-opacity-25 text-danger ...">{{ question.likes_kol }}</span>
+                    <span class="badge bg-success bg-opacity-25 text-success">{{ question.like }}</span>
+                </button>
+                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                    <span>DisLike</span>
+                    <span class="badge bg-danger bg-opacity-25 text-danger">{{ question.dis }}</span>
                 </button>
             </div>
         </div>

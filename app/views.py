@@ -1,11 +1,10 @@
-from random import randint
-
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from django.shortcuts import render
 from app.models import Question, Tag, Profile, Answer
 
 
-def paginate(objects_list: list, request, per_page=10, pag_size=7):
+def paginate(objects_list, request, per_page=10, pag_size=7):
     num = int(request.GET.get('page', 1))
     paginator = Paginator(objects_list, per_page)
     page = paginator.page(num)
@@ -20,8 +19,8 @@ def paginate(objects_list: list, request, per_page=10, pag_size=7):
 # Create your views here.
 def index(request):
     profile = Profile.objects.first()
-    questions = Question.objects.get_listing()
-    pagination = paginate(questions, request, 5)
+    pagination = paginate(Question.objects.get_listing(), request, 5)
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -35,23 +34,23 @@ def index(request):
 
 def hot(request):
     profile = Profile.objects.first()
-    questions = Question.objects.get_hot()
-    pagination = paginate(questions, request, 5)
+    pagination = paginate(Question.objects.get_hot(), request, 5)
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
                       **pagination,
                       "tags": Tag.objects.get_popular_tags(),
                       "nicks": Profile.objects.get_most_active(),
-                      "head": ["Hot questions", "List of questions", "hot"]
+                      "head": ["Hot questions", "List of questions", "index"]
                   }
             )
 
 
 def tag(request, name):
     profile = Profile.objects.first()
-    questions = Question.objects.get_by_tag(name)
-    pagination = paginate(questions, request, 5)
+    pagination = paginate(Question.objects.get_by_tag(name), request, 5)
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -67,6 +66,7 @@ def question(request, question_id):
     profile = Profile.objects.first()
     quest = Question.objects.get_by_id(question_id)
     pagination = paginate(Answer.objects.get_by_question_id(question_id), request, 5)
+    pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"]))
     return render(request, 'question.html',
                   context={
                       "profile": profile,

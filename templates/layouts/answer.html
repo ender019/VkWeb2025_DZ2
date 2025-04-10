@@ -2,16 +2,21 @@
 
 <div class="card mb-3">
     <div class="card-body row">
-        <div class="col-2 border-end">
+        <div class="col-2 border-end me-1 row">
             <img src="{% static answer.profile.avatar %}" class="img-thumbnail" alt="...">
+            <span class="text-truncate col">{{ answer.profile.nickname }}</span>
             <div class="d-flex align-items-center">
-                <span class="text-truncate col-7 me-2">{{ answer.profile.nickname }}</span>
-                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                <button type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
                     <span>Like</span>
-                    <span class="badge bg-danger bg-opacity-25 text-danger ...">{{ answer.likes_kol }}</span>
+                    <span class="badge bg-success bg-opacity-25 text-success">{{ answer.like }}</span>
+                </button>
+                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                    <span>DisLike</span>
+                    <span class="badge bg-danger bg-opacity-25 text-danger">{{ answer.dis }}</span>
                 </button>
             </div>
         </div>
+    
         <div class="col">
             <p class="card-text"> {{ answer.text }} </p>
             <div class="form-check d-flex align-items-center">

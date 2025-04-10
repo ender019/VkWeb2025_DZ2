@@ -20,9 +20,6 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{% url "ask" %}">Ask</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
-				</li>
 			</ul>
 
 			<form class="d-flex" role="search">
@@ -37,7 +34,7 @@
 					<div class="content_name text-truncate">{{ profile.nickname }}</div>
 					<div class="content_links">
 						<a href="{% url "settings" %}">Settings</a>
-						<a href="#">Log out</a>
+						<a href="{% url "login" %}">Log out</a>
 					</div>
 				</div>
 			</div>

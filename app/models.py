@@ -56,6 +56,7 @@ class Answer(models.Model):
 class QuestionsLikes(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='qst_likes')
+    pos = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'questions_likes'
@@ -65,6 +66,7 @@ class QuestionsLikes(models.Model):
 class AnswersLikes(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='ans_likes')
+    pos = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'answers_likes'
