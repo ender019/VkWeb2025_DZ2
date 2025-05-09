@@ -1,0 +1,70 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Profiles {
+	id integer [primary key]
+	nickname varchar(50) [not null]
+	avatar varchar
+	user_id integer [unique, not null]
+}
+
+Table Questions {
+	id integer [primary key]
+	title varchar(100) [unique, not null]
+	text text [not null]
+	posted datetime [not null]
+	profile_id integer [not null]
+}
+
+Table Answers {
+	id integer [primary key]
+	text text [not null]
+  correct bool [default: 0]
+	posted datetime [default: "now", not null]
+	question_id integer [not null]
+	profile_id integer [not null]
+}
+
+Table Tags {
+	id integer [primary key]
+	title varchar(20) [not null]
+}
+
+Table Question_Tags {
+	question_id integer
+	tag_id integer
+}
+
+Table Question_Likes {
+	question_id integer
+	profile_id integer
+}
+
+Table Answer_Likes {
+	answer_id integer
+	profile_id integer
+}
+
+Ref prof_quest: Questions.profile_id > Profiles.id 
+Ref prof_comm: Answers.profile_id > Profiles.id 
+Ref comm_quest: Questions.id > Answers.question_id
+Ref qt_quest: Questions.id > Question_Tags.question_id
+Ref qt_tag: Tags.id > Question_Tags.tag_id
+Ref quest_like: Questions.id > Question_Likes.question_id
+Ref answer_like: Profiles.id > Question_Likes.profile_id
+Ref quest_like: Answers.id > Answer_Likes.answer_id
+Ref answer_like: Profiles.id > Answer_Likes.profile_id
+
+
+
+
+
+
+
+
+
+
+
+
+
+

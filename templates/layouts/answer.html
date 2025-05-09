@@ -2,24 +2,28 @@
 
 <div class="card mb-3">
     <div class="card-body row">
-        <div class="col-2 border-end">
-            <img src="{% static "/img/PELMEN.PNG" %}" class="img-thumbnail" alt="...">
-            <div class="d-flex flex-row-reverse">
-                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+        <div class="col-2 border-end me-1 row">
+            <img src="{% static answer.profile.avatar %}" class="img-thumbnail" alt="...">
+            <span class="text-truncate col">{{ answer.profile.nickname }}</span>
+            <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
                     <span>Like</span>
-                    <span class="badge bg-danger bg-opacity-25 text-danger ...">0</span>
+                    <span class="badge bg-success bg-opacity-25 text-success">{{ answer.like }}</span>
+                </button>
+                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                    <span>DisLike</span>
+                    <span class="badge bg-danger bg-opacity-25 text-danger">{{ answer.dis }}</span>
                 </button>
             </div>
         </div>
+    
         <div class="col">
-            <p class="card-text">
-                Прежде всего курс на социально-ориентированный национальный проект обеспечивает актуальность укрепления демократической системы.
-            </p>
+            <p class="card-text"> {{ answer.text }} </p>
             <div class="form-check d-flex align-items-center">
-                <input type="checkbox" class="form-check-input mb-1" id="correct">
+                <input type="checkbox" class="form-check-input mb-1" id="correct" {% if answer.correct %} checked {% endif %}>
                 <label class="form-check-label ms-2" for="correct">Correct!</label>
             </div>
-            <p class="card-text"><small class="text-body-secondary">Posted 3 mins ago</small></p>
+            <p class="card-text"><small class="text-body-secondary">Posted {{ answer.posted }}</small></p>
         </div>
     </div>
 </div>

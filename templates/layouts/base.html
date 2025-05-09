@@ -20,9 +20,6 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{% url "ask" %}">Ask</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
-				</li>
 			</ul>
 
 			<form class="d-flex" role="search">
@@ -31,13 +28,13 @@
 			</form>
 			<div class="d-flex align-items-center">
 				<div class="me-3 ">
-					<img width="50px" src="{% static "/img/PELMEN.PNG" %}" class="img-thumbnail" alt="...">
+					<img width="50px" src="{% static profile.avatar %}" class="img-thumbnail" alt="...">
 				</div>
-				<div class="content">
-					<div class="content_name">Dr name</div>
+				<div class="content" style="max-width: 35%">
+					<div class="content_name text-truncate">{{ profile.nickname }}</div>
 					<div class="content_links">
 						<a href="{% url "settings" %}">Settings</a>
-						<a href="#">Log out</a>
+						<a href="{% url "login" %}">Log out</a>
 					</div>
 				</div>
 			</div>
@@ -53,19 +50,7 @@
 
 		<aside class="col-2 vh-100">
 			{% include "layouts/tags.html" %}
-
-			<div class="ms-1">
-				<h4>Best membars</h4>
-				<div class="ms-4">
-					<a href="#" class="d-block">name1</a>
-					<a href="#" class="d-block">name2</a>
-					<a href="#" class="d-block">name3</a>
-					<a href="#" class="d-block">name4</a>
-					<a href="#" class="d-block">name6</a>
-					<a href="#" class="d-block">name7</a>
-					<a href="#" class="d-block">name8</a>
-				</div>
-			</div>
+			{% include "layouts/nicks.html" %}
 		</aside>
 	</main>
 </body>
