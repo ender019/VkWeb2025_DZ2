@@ -1,59 +1,21 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
 			<div class="container col-12 col-md-8">
 				<div class="registration-card bg-white p-4 p-md-5">
 					<h2 class="text-center mb-4">Регистрация</h2>
-					<form>
-						<div class="mb-3 d-flex align-items-center">
-							<label for="login" class="form-label me-3">Login</label>
-							<input type="text" class="form-control" id="login" required>
-						</div>
-	
-						<div class="mb-3 d-flex align-items-center">
-							<label for="email" class="form-label me-3">Email</label>
-							<input type="email" class="form-control" id="email" required>
-						</div>
-	
-						<div class="mb-3 d-flex align-items-center">
-							<label for="nickname" class="form-label me-3">Nickname</label>
-							<input type="text" class="form-control" id="nickname" required>
-						</div>
-	
-						<div class="row">
-							<div class="col-md-6 mb-3">
-								<label for="password" class="form-label">Пароль</label>
-								<input type="password" class="form-control" id="password" required>
-							</div>
-							<div class="col-md-6 mb-3">
-								<label for="confirmPassword" class="form-label">Подтвердите пароль</label>
-								<input type="password" class="form-control" id="confirmPassword" required>
-							</div>
-						</div>
-
-						<div class="mb-3">
-							<label for="imageUpload" class="form-label">Выберите аватар</label>
-							<input type="file" class="form-control" id="imageUpload" accept="image/*">
-							<div class="form-text">
-							  Поддерживаемые форматы: JPG, PNG, GIF
-							</div>
-						</div>
-	
-						<div class="mb-3 form-check">
-							<input type="checkbox" class="form-check-input" id="terms">
-							<label class="form-check-label" for="terms">
-								Принимаю <a href="#">условия использования</a>
-							</label>
-						</div>
-						
-						<h5 class="text-danger">error</h5>
-						<button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
-	
-						<p class="text-center mt-3">
-							Уже есть аккаунт? <a href="{% url "login" %}" class="text-decoration-none">Войти</a>
-						</p>
+					<form action="" method="POST">
+                        {% bootstrap_form form %}
+						{% buttons %}
+                            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+	                    {% endbuttons %}
 					</form>
+                    
+                    <p class="text-center mt-3">
+                        Уже есть аккаунт? <a href="{% url "login" %}" class="text-decoration-none">Войти</a>
+                    </p>
 				</div>
 			</div>
 {% endblock %}

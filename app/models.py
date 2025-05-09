@@ -8,7 +8,7 @@ from app.model_manager import ProfileManager, QuestionManager, AnswerManager, Ta
 class Profile(models.Model):
     objects = ProfileManager()
 
-    nickname = models.CharField(max_length=50)
+    nickname = models.CharField(max_length=30)
     avatar = models.CharField(max_length=254, null=True, default=None)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -44,7 +44,7 @@ class Answer(models.Model):
 
     text = models.TextField(null=False)
     correct = models.BooleanField(default=False)
-    posted = models.DateTimeField(auto_now_add=True)
+    posted = models.DateTimeField()
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, related_name='ans_creator')
@@ -56,7 +56,7 @@ class Answer(models.Model):
 class QuestionsLikes(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='qst_likes')
-    pos = models.IntegerField(default=0)
+    pos = models.BooleanField(default=0)
 
     class Meta:
         db_table = 'questions_likes'
@@ -66,7 +66,7 @@ class QuestionsLikes(models.Model):
 class AnswersLikes(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='ans_likes')
-    pos = models.IntegerField(default=0)
+    pos = models.BooleanField(default=0)
 
     class Meta:
         db_table = 'answers_likes'

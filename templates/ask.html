@@ -1,27 +1,16 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
 			<div class="container">
 				<div class="registration-card bg-white p-4 p-md-5">
 					<h2 class="text-center mb-4">Новый вопрос</h2>
-					<form class="container">
-						<div class="mb-3 d-flex align-items-center">
-							<label for="title" class="form-label col-3">Заголовок</label>
-							<input type="text" class="form-control col-9 w-75" id="title" required>
-						</div>
-	
-						<div class="mb-3 d-flex align-items-center">
-							<label for="text" class="form-label col-3">Содержание</label>
-							<textarea id="text" class="col-9" rows="10" cols="70" required></textarea>
-						</div>
-						
-						<div class="mb-3 d-flex align-items-center">
-							<label for="tegs" class="form-label col-3">Теги</label>
-							<input type="text" class="form-control col-9 w-75" id="tegs" required>
-						</div>
-
-						<button type="submit" class="btn btn-primary w-100">Спросить</button>
+					<form class="container" action="" method="POST">
+						{% bootstrap_form form %}
+                        {% buttons %}
+						    <button type="submit" class="btn btn-primary w-100">Спросить</button>
+                        {% endbuttons %}
 					</form>
 				</div>
 			</div>

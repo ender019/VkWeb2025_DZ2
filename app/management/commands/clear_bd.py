@@ -2,7 +2,6 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
-from django.db import transaction
 
 from app.models import Question, Profile, Tag, Answer, QuestionsTags, QuestionsLikes, AnswersLikes
 
@@ -27,4 +26,4 @@ class Command(BaseCommand):
         Profile.objects.all().delete()
         print(st_time.now()-st_time, "Очистка юзеров...")
         User.objects.all().delete()
-        print(st_time.now()-st_time, "Завершение транзакции...")
+        print(st_time.now()-st_time, "Завершено!")

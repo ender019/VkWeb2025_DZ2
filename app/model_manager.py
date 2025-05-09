@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Q, Prefetch
 
 
 class ProfileManager(models.Manager):
@@ -7,6 +7,20 @@ class ProfileManager(models.Manager):
         return (self.annotate(quest_kol=models.Count("qst_creator")).order_by('-quest_kol')
                     .values_list("nickname", flat=True)[:kol])
 
+    def get_current (self, username):
+        try:
+            return self.get(user__username=username)
+        except Exception as e:
+            return None
+
+    def updating(self, username, data):
+        profile = self.get_current(username)
+        if data.get("username"): profile.user.username = data.get("username")
+        if data.get("email"): profile.user.email = data.get("email")
+        if data.get("nickname"): profile.nickname = data.get("nickname")
+        if data.get("avatar"): profile.avatar = data.get("avatar")
+        profile.user.save()
+        profile.save()
 
 class QuestionManager(models.Manager):
     def full_listing(self, page):
@@ -29,7 +43,9 @@ class QuestionManager(models.Manager):
         return self.annotate(ans_kol=models.Count("answer")).order_by('-ans_kol', "-posted").all()
 
     def get_by_id(self, question_id):
-        return (self.annotate(like=Sum('likes__pos'), dis=Count("likes", filter=Q(likes__pos__exact=0)))
+        return (self.annotate(
+                    like=Count("likes", filter=Q(likes__pos__exact=1)),
+                    dis=Count("likes", filter=Q(likes__pos__exact=0)))
                 .get(pk=question_id))
 
     def get_by_tag(self, title):
@@ -50,8 +66,9 @@ class AnswerManager(models.Manager):
             ).order_by("-like", "-posted").all())
 
     def get_by_question_id(self, question_id):
-        return (self.filter(question_id=question_id).annotate(likes_kol=models.Sum("likes__pos"))
-                .order_by('-likes_kol').all())
+        return (self.filter(question_id=question_id)
+                .annotate(likes_kol=models.Count("likes", filter=Q(likes__pos__exact=1)))
+                .order_by('-likes_kol', "-posted").all())
 
 
 class TagManager(models.Manager):

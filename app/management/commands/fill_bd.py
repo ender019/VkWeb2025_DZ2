@@ -2,7 +2,6 @@ from datetime import timedelta, datetime
 
 from django.core.management import BaseCommand
 from django.contrib.auth.models import User
-from django.db import transaction
 from django.utils import timezone
 
 from app.models import Question, Profile, Answer, Tag, QuestionsLikes, AnswersLikes, QuestionsTags
@@ -22,6 +21,9 @@ class Command(BaseCommand):
         let = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         return "".join(choices(let, k=kol))
 
+    def rand_text(self, a=1, b=10):
+        return " ".join([self.rand_str(randint(a, b)) for i in range(randint(1, 30))])
+
     def rand_date(self) -> datetime:
         return timezone.make_aware(
             datetime.now()-timedelta(seconds=randint(1, 10**9)),
@@ -30,32 +32,38 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         kol: int = options['ratio']
-        likers_kol = min(kol, self.likers_kol)
+        self.likers_kol = min(kol, self.likers_kol)
         st_time = datetime.now()
 
         print(st_time.now()-st_time, "генерация тегов...")
         tags = [Tag(id=i, title=f"tag{i}") for i in range(kol)]
+
         print(st_time.now()-st_time, "генерация юзеров...")
         users = [User(
-                username=self.rand_str(randint(10,50)),
-                email=self.rand_str(randint(5,20))+"@mail.ru"
+                username=self.rand_str(randint(10,30)),
+                email=self.rand_str(randint(5,20))+"@mail.ru",
             ) for i in range(kol)]
+        users.append(User(username="admin", email="admin@mail.ru", is_superuser=True))
+        users[-1].set_password("12345678")
+
         print(st_time.now()-st_time, "генерация профилей...")
         profiles = [Profile(
-            nickname=self.rand_str(randint(10,50)),
+            nickname=self.rand_str(randint(10,30)),
             avatar=f"/img/{choices(self.img)[0]}",
             user=users[i]
         ) for i in range(kol)]
+
         print(st_time.now()-st_time, "генерация вопросов...")
         questions = [Question(
                 title=f"Question {i}",
-                text="question "*randint(1, 100),
+                text=self.rand_text(5, 20)+str(i),
                 posted=self.rand_date(),
                 profile=profiles[randint(0, kol-1)]
             ) for i in range(kol*10)]
+
         print(st_time.now()-st_time, "генерация ответов...")
         answers = [Answer(
-                text="answer "*randint(1, 10)+str(i),
+                text=self.rand_text(1, 11)+str(i),
                 correct=randint(0, 1),
                 posted=self.rand_date(),
                 question=questions[randint(0, 10*kol-1)],

@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
 			<section class="d-flex align-items-center ms-4">
@@ -10,6 +11,16 @@
             {% include "layouts/question.html" %}
 
             <br>
+    
+            <section>
+                <form action="" method="POST">
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary w-100">Отправить</button>
+                    {% endbuttons %}
+                </form>
+            </section>
+        
 			<section class="d-inline vh-100">
 				{% for answer in page.object_list %}
                     {% include "layouts/answer.html" %}

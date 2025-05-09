@@ -27,16 +27,23 @@
 				<button class="btn btn-outline-danger" type="submit">Search</button>
 			</form>
 			<div class="d-flex align-items-center">
-				<div class="me-3 ">
-					<img width="50px" src="{% static profile.avatar %}" class="img-thumbnail" alt="...">
-				</div>
-				<div class="content" style="max-width: 35%">
-					<div class="content_name text-truncate">{{ profile.nickname }}</div>
-					<div class="content_links">
-						<a href="{% url "settings" %}">Settings</a>
-						<a href="{% url "login" %}">Log out</a>
-					</div>
-				</div>
+                {% if profile %}
+                    <div class="me-3 ">
+                        <img width="50px" src="{% static profile.avatar %}" class="img-thumbnail" alt="...">
+                    </div>
+                    <div class="content" style="max-width: 35%">
+                        <div class="content_name text-truncate">{{ profile.nickname }}</div>
+                        <div class="content_links d-flex gap-1">
+                            <a href="{% url "settings" %}">Settings</a>
+                            <a href="{% url "logout" %}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="content_links">
+                        <a href="{% url "login" %}">SignIn</a>
+                        <a href="{% url "signup" %}">SignUp</a>
+                    </div>
+                {% endif %}
 			</div>
 		</div>
 	</nav>
