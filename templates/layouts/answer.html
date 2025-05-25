@@ -6,11 +6,13 @@
             <img src="{% static answer.profile.avatar.url %}" class="img-thumbnail" alt="...">
             <span class="text-truncate col">{{ answer.profile.nickname }}</span>
             <div class="d-flex align-items-center">
-                <button data-alike-id="{{ answer.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
+                <button data-alike-id="{{ answer.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2"
+                        {% if answer.fase == 2 %} style="background-color: #0D0; color: #FFF" {% endif %}>
                     <span>Like</span>
                     <span data-alike-kol="{{ answer.id }}" class="badge bg-success bg-opacity-25 text-success">{{ answer.like }}</span>
                 </button>
-                <button data-adislike-id="{{ answer.id }}" type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                <button data-adislike-id="{{ answer.id }}" type="button" class="btn btn-outline-danger rounded-pill mt-1"
+                        {% if answer.fase == 1 %} style="background-color: #F88; color: #FFF" {% endif %}>
                     <span>DisLike</span>
                     <span data-adislike-kol="{{ answer.id }}" class="badge bg-danger bg-opacity-25 text-danger">{{ answer.dis }}</span>
                 </button>

@@ -6,11 +6,13 @@
             <img src="{% static question.profile.avatar.url %}" class="img-thumbnail col m-3 ms-0 mb-0" alt="...">
             <span class="text-truncate col">{{ question.profile.nickname }}</span>
             <div class="d-flex align-items-center">
-                <button data-qlike-id="{{ question.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
-                    <span>Like</span>
+                <button data-qlike-id="{{ question.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2"
+                        {% if question.fase == 2 %} style="background-color: #0D0; color: #FFF" {% endif %}>
+                    <span>Like</span>   
                     <span data-qlike-kol="{{ question.id }}" class="badge bg-success bg-opacity-25 text-success">{{ question.like }}</span>
                 </button>
-                <button data-qdislike-id="{{ question.id }}" type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                <button data-qdislike-id="{{ question.id }}" type="button" class="btn btn-outline-danger rounded-pill mt-1"
+                    {% if question.fase == 1 %} style="background-color: #F88; color: #FFF" {% endif %}>
                     <span>DisLike</span>
                     <span data-qdislike-kol="{{ question.id }}" class="badge bg-danger bg-opacity-25 text-danger">{{ question.dis }}</span>
                 </button>

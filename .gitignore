@@ -16,7 +16,7 @@ venv/
 
 
 static/css
-static/js
+static/js/bootstrap.*
 
 
 .idea/

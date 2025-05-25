@@ -29,7 +29,7 @@ def paginate(objects_list, request, per_page=10, pag_size=7):
 def index(request):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_listing(), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -44,7 +44,7 @@ def index(request):
 def hot(request):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_hot(), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -59,7 +59,7 @@ def hot(request):
 def tag(request, name):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_by_tag(name), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"]))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -73,9 +73,10 @@ def tag(request, name):
 
 def question(request, question_id):
     profile = Profile.objects.get_current(request.user)
-    quest = Question.objects.get_by_id(question_id)
+    quest = Question.objects.get_by_id(question_id, profile.id)
     pagination = paginate(Answer.objects.get_by_question_id(question_id), request, 5)
-    pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"]))
+    pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"], profile.id))
+    print(pagination["page"].object_list[0].fase)
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
