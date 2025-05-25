@@ -1,14 +1,16 @@
+import json
 from datetime import timezone, datetime
 
+from bs4.diagnose import profile
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 
 from app.forms import LoginForm, SettingsForm, RegisterForm, AskForm, AnswerForm
-from app.models import Question, Tag, Profile, Answer, QuestionsTags
+from app.models import Question, Tag, Profile, Answer, QuestionsTags, QuestionsLikes, AnswersLikes
 
 
 def paginate(objects_list, request, per_page=10, pag_size=7):
@@ -124,7 +126,7 @@ def logout(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if not form.is_valid():
             return render(request, 'signup.html', context={
                                 "tags": Tag.objects.get_popular_tags(),
@@ -132,11 +134,7 @@ def signup(request):
                                 "form": form
                             }
                         )
-        user = User(username=form.cleaned_data['username'], email=form.cleaned_data['email'], )
-        user.set_password(form.cleaned_data['password'])
-        profile = Profile(nickname=form.cleaned_data['nickname'], avatar=form.cleaned_data['avatar'], user=user)
-        user.save()
-        profile.save()
+        form.save()
         user = auth.authenticate(request, **form.cleaned_data)
         if user:
             auth.login(request, user)
@@ -189,10 +187,8 @@ def ask(request):
 @login_required(login_url=reverse_lazy("login"))
 def settings(request):
     profile = Profile.objects.get_current(request.user)
-    print(profile.nickname)
     if request.method == 'POST':
-        print(request.POST)
-        form = SettingsForm(request.POST)
+        form = SettingsForm(request.POST, request.FILES)
         if not form.is_valid():
             return render(request,'settings.html',
                   context={
@@ -202,8 +198,8 @@ def settings(request):
                       "form": form,
                   }
             )
-        print(form.cleaned_data)
         Profile.objects.updating(request.user, form.cleaned_data)
+        return redirect(reverse('settings'))
     else:
         data = {
             "username": profile.user.username,
@@ -220,3 +216,28 @@ def settings(request):
                       "form": form,
                   }
             )
+
+@login_required
+def questions_likes(request, question_id):
+    data = json.loads(request.body)
+    profile = Profile.objects.get_current(request.user)
+    fase = QuestionsLikes.objects.add(profile.id, question_id, data.get("pos"))
+    res = QuestionsLikes.objects.get_count(question_id)
+    if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
+    return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
+
+@login_required
+def answer_likes(request, answer_id):
+    data = json.loads(request.body)
+    profile = Profile.objects.get_current(request.user)
+    fase = AnswersLikes.objects.add(profile.id, answer_id, data.get("pos"))
+    res = AnswersLikes.objects.get_count(answer_id)
+    if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
+    return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
+
+
+@login_required
+def answer_correct(request, answer_id):
+    data = json.loads(request.body)
+    Answer.objects.set_correct(answer_id, not data.get("cor"))
+    return JsonResponse({})

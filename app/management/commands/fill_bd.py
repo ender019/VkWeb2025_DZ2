@@ -49,7 +49,7 @@ class Command(BaseCommand):
         print(st_time.now()-st_time, "генерация профилей...")
         profiles = [Profile(
             nickname=self.rand_str(randint(10,30)),
-            avatar=f"/img/{choices(self.img)[0]}",
+            avatar=choices(self.img)[0],
             user=users[i]
         ) for i in range(kol)]
 

@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +30,7 @@
 			<div class="d-flex align-items-center">
                 {% if profile %}
                     <div class="me-3 ">
-                        <img width="50px" src="{% static profile.avatar %}" class="img-thumbnail" alt="...">
+                        <img width="50px" src="{% static profile.avatar.url %}" class="img-thumbnail" alt="...">
                     </div>
                     <div class="content" style="max-width: 35%">
                         <div class="content_name text-truncate">{{ profile.nickname }}</div>

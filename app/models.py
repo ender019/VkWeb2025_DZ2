@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from app.model_manager import ProfileManager, QuestionManager, AnswerManager, TagManager
+from app.model_manager import ProfileManager, QuestionManager, AnswerManager, TagManager, QuestionsLikesManager, \
+    AnswersLikesManager
 
 
 # Create your models here.
@@ -9,7 +10,7 @@ class Profile(models.Model):
     objects = ProfileManager()
 
     nickname = models.CharField(max_length=30)
-    avatar = models.CharField(max_length=254, null=True, default=None)
+    avatar = models.ImageField(upload_to='.')
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -54,6 +55,8 @@ class Answer(models.Model):
 
 
 class QuestionsLikes(models.Model):
+    objects = QuestionsLikesManager()
+
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='qst_likes')
     pos = models.BooleanField(default=0)
@@ -64,6 +67,8 @@ class QuestionsLikes(models.Model):
 
 
 class AnswersLikes(models.Model):
+    objects = AnswersLikesManager()
+
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='likes')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='ans_likes')
     pos = models.BooleanField(default=0)

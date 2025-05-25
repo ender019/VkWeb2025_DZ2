@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count, Sum, Q, Prefetch
+from django.db.models import Count, Q
 
 
 class ProfileManager(models.Manager):
@@ -59,6 +59,9 @@ class AnswerManager(models.Manager):
     def get_correct(self, question_id: int):
         return self.filter(question_id=question_id, correct=True).all()
 
+    def set_correct(self, answer_id: int, cor: bool):
+        return self.filter(id=answer_id).update(correct=cor)
+
     def full_answers(self, page):
         return (self.filter(id__in=page.object_list.values_list('id', flat=True)).annotate(
                 like=Count("likes", filter=Q(likes__pos__exact=1)),
@@ -78,3 +81,45 @@ class TagManager(models.Manager):
     def get_popular_tags(self):
         return (self.annotate(quest_kol=models.Count("tagged_questions"))
                 .order_by('-quest_kol').values_list("title", flat=True)[:20])
+
+
+class QuestionsLikesManager(models.Manager):
+    def get_count(self, question_id: int):
+        return self.filter(question_id=question_id).annotate(
+                like=Count("pos", filter=Q(pos__exact=1)),
+                dis=Count("pos", filter=Q(pos__exact=0))
+            ).first()
+
+    def add(self, profile_id: int, question_id: int, pos: int):
+        obj = self.filter(profile_id=profile_id, question_id=question_id).first()
+        if not obj:
+            self.create(profile_id=profile_id, question_id=question_id, pos=pos)
+            return pos + 1
+        if obj.pos == pos:
+            obj.delete()
+            return 0
+        else:
+            obj.pos = pos
+            obj.save()
+            return pos + 1
+
+
+class AnswersLikesManager(models.Manager):
+    def get_count(self, answer_id: int):
+        return self.filter(answer_id=answer_id).annotate(
+                like=Count("pos", filter=Q(pos__exact=1)),
+                dis=Count("pos", filter=Q(pos__exact=0))
+            ).first()
+
+    def add(self, profile_id: int, answer_id: int, pos: int):
+        obj = self.filter(profile_id=profile_id, answer_id=answer_id).first()
+        if not obj:
+            self.create(profile_id=profile_id, answer_id=answer_id, pos=pos)
+            return pos + 1
+        if obj.pos == pos:
+            obj.delete()
+            return 0
+        else:
+            obj.pos = pos
+            obj.save()
+            return pos + 1

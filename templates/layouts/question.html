@@ -3,16 +3,16 @@
 <div class="card mb-3">
     <div class="card-body row">
         <div class="col-2 border-end me-1 row">
-            <img src="{% static question.profile.avatar %}" class="img-thumbnail col m-3 ms-0 mb-0" alt="...">
+            <img src="{% static question.profile.avatar.url %}" class="img-thumbnail col m-3 ms-0 mb-0" alt="...">
             <span class="text-truncate col">{{ question.profile.nickname }}</span>
             <div class="d-flex align-items-center">
-                <button type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
+                <button data-qlike-id="{{ question.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2">
                     <span>Like</span>
-                    <span class="badge bg-success bg-opacity-25 text-success">{{ question.like }}</span>
+                    <span data-qlike-kol="{{ question.id }}" class="badge bg-success bg-opacity-25 text-success">{{ question.like }}</span>
                 </button>
-                <button type="button" class="btn btn-outline-danger rounded-pill mt-1">
+                <button data-qdislike-id="{{ question.id }}" type="button" class="btn btn-outline-danger rounded-pill mt-1">
                     <span>DisLike</span>
-                    <span class="badge bg-danger bg-opacity-25 text-danger">{{ question.dis }}</span>
+                    <span data-qdislike-kol="{{ question.id }}" class="badge bg-danger bg-opacity-25 text-danger">{{ question.dis }}</span>
                 </button>
             </div>
         </div>

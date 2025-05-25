@@ -1,5 +1,3 @@
-from cProfile import label
-
 from django import forms
 from django.contrib.auth.models import User
 
@@ -13,7 +11,7 @@ class RegisterForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, label='Password', max_length=30)
     passwordr = forms.CharField(widget=forms.PasswordInput, label='Passwordr', max_length=30)
     avatar = forms.ImageField(label='Avatar', required=False)
-    accept = forms.BooleanField(label='Accept', required=False)
+    accept = forms.BooleanField(label='Accept', required=True)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -43,10 +41,24 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("Passwords do not match")
         return password
 
+    def clean_avatar(self):
+        print(self.cleaned_data['avatar'])
+        if self.cleaned_data['avatar']  is None:
+            self.cleaned_data['avatar'] = "default.jpg"
+        return self.cleaned_data['avatar']
+
     def clean_accept(self):
         if not self.cleaned_data['accept']:
             raise forms.ValidationError('Accept conditions!')
         return self.cleaned_data['accept']
+
+    def save(self):
+        user = User(username=self.cleaned_data['username'], email=self.cleaned_data['email'], )
+        user.set_password(self.cleaned_data['password'])
+        profile = Profile(nickname=self.cleaned_data['nickname'], avatar=self.cleaned_data['avatar'], user=user)
+        user.save()
+        profile.save()
+        return user
 
 
 class LoginForm(forms.Form):
