@@ -75,11 +75,11 @@ def question(request, question_id):
     quest = Question.objects.get_by_id(question_id, profile.id if profile else -1)
     pagination = paginate(Answer.objects.get_by_question_id(question_id), request, 5)
     pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"], profile.id if profile else -1))
-    print(pagination["page"].object_list[0].fase)
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
-            Answer.objects.create(text=form.cleaned_data['text'], question=quest, posted=datetime.now())
+            Answer.objects.create(text=form.cleaned_data['text'], question=quest,
+                                  posted=datetime.now(), profile_id=profile.id)
             return redirect('question', question_id=question_id)
     else:
         form = AnswerForm()
@@ -157,23 +157,23 @@ def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
         if not form.is_valid():
-            return render(request, 'index.html', context={
+            return render(request, 'ask.html', context={
                               "profile": profile,
                               "tags": Tag.objects.get_popular_tags(),
                               "nicks": Profile.objects.get_most_active(),
                               "form": form,
                     }
                 )
-        print(form.cleaned_data)
-        question = Question(title=form.cleaned_data['title'], text=form.cleaned_data['text'], profile=profile, posted=datetime.now())
+        question = Question(title=form.cleaned_data['title'], text=form.cleaned_data['text'],
+                            profile=profile, posted=datetime.now())
         question.save()
         QuestionsTags.objects.bulk_create([
             QuestionsTags(question=question, tag=Tag.objects.get_or_create(title=el)[0])
             for el in form.cleaned_data['tags']
         ])
         question.save()
-    else:
-        form = AskForm()
+        return redirect('question', question_id=question.id)
+    form = AskForm()
     return render(request, 'ask.html',
                   context={
                       "profile": profile,

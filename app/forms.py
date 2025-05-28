@@ -86,6 +86,8 @@ class AskForm(forms.Form):
 
     def clean_tags(self):
         tags = list(filter(lambda s: len(s)>0, self.cleaned_data['tags'].split()))
+        if len(tags) > 3:
+            raise forms.ValidationError("Tags must be at least 3")
         for tag in tags:
             if len(tag) > 20:
                 raise forms.ValidationError("Tag must be less than 20 characters")
