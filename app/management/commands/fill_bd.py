@@ -52,6 +52,7 @@ class Command(BaseCommand):
             avatar=choices(self.img)[0],
             user=users[i]
         ) for i in range(kol)]
+        profiles.append(Profile(nickname="Admin", avatar=choices(self.img)[0], user=users[-1]))
 
         print(st_time.now()-st_time, "генерация вопросов...")
         questions = [Question(

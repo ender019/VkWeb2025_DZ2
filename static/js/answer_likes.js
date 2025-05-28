@@ -60,9 +60,9 @@ function createVoteHandler(type, prefix) {
     };
 }
 
-function handleCorrect(e) {
+async function handleCorrect(e) {
     const item = e.target;
-    fetch(`/answer/${item.dataset.correctId}/correct`, {
+    const resp = await fetch(`/answer/${item.dataset.correctId}/correct`, {
         method: 'POST',
         body: JSON.stringify({"cor": !item.checked}),
         headers: {
@@ -71,6 +71,10 @@ function handleCorrect(e) {
         },
         mode: 'same-origin'
     });
+
+    const res = await resp.json();
+    console.log(res, item)
+    if (!resp.cor) item.checked = !item.checked
 }
 
 function initVoteButtons(selector, prefix, type) {

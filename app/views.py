@@ -221,23 +221,26 @@ def settings(request):
 def questions_likes(request, question_id):
     data = json.loads(request.body)
     profile = Profile.objects.get_current(request.user)
-    fase = QuestionsLikes.objects.add(profile.id if profile else -1, question_id, data.get("pos"))
+    fase = QuestionsLikes.objects.add_react(profile.id if profile else -1, question_id, data.get("pos"))
     res = QuestionsLikes.objects.get_count(question_id)
     if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
-    return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
+    return JsonResponse({"likes": res["like"], "dislikes": res["dis"], "fase": fase})
 
 @login_required
 def answer_likes(request, answer_id):
     data = json.loads(request.body)
     profile = Profile.objects.get_current(request.user)
-    fase = AnswersLikes.objects.add(profile.id if profile else -1, answer_id, data.get("pos"))
+    fase = AnswersLikes.objects.add_react(profile.id if profile else -1, answer_id, data.get("pos"))
     res = AnswersLikes.objects.get_count(answer_id)
     if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
-    return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
+    return JsonResponse({"likes": res["like"], "dislikes": res["dis"], "fase": fase})
 
 
 @login_required
 def answer_correct(request, answer_id):
     data = json.loads(request.body)
+    profile = Profile.objects.get_current(request.user)
+    res = Answer.objects.get(id=answer_id).profile_id == profile.id
+    if not res: JsonResponse({"cor": True})
     Answer.objects.set_correct(answer_id, not data.get("cor"))
-    return JsonResponse({})
+    return JsonResponse({"cor": False})

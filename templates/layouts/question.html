@@ -7,7 +7,7 @@
             <span class="text-truncate col">{{ question.profile.nickname }}</span>
             <div class="d-flex align-items-center">
                 <button data-qlike-id="{{ question.id }}" type="button" class="btn btn-outline-success rounded-pill mt-1 me-2"
-                        {% if question.fase == 2 %} style="background-color: #0D0; color: #FFF" {% endif %}>
+                       >
                     <span>Like</span>   
                     <span data-qlike-kol="{{ question.id }}" class="badge bg-success bg-opacity-25 text-success">{{ question.like }}</span>
                 </button>

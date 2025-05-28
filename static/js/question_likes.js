@@ -23,6 +23,7 @@ async function handleVote(url, data, counters) {
 
         const result = await response.json();
         // Обновление счетчиков
+        console.log(result)
         for(const [selector, valueKey] of Object.entries(counters)) {
             const element = document.querySelector(selector);
             if(element) element.innerHTML = result[valueKey];

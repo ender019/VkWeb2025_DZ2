@@ -129,12 +129,14 @@ class TagManager(models.Manager):
 
 class QuestionsLikesManager(models.Manager):
     def get_count(self, question_id: int):
-        return self.filter(question_id=question_id).annotate(
-                like=Count("pos", filter=Q(pos=1)),
-                dis=Count("pos", filter=Q(pos=0))
-            ).first()
+        res =self.filter(question_id=question_id).aggregate(
+                like=Count("id", filter=Q(pos=1)),
+                dis=Count("id", filter=Q(pos=0))
+            )
+        return res
 
-    def add(self, profile_id: int, question_id: int, pos: int):
+    def add_react(self, profile_id: int, question_id: int, pos: int):
+        print(profile_id, question_id, pos)
         obj = self.filter(profile_id=profile_id, question_id=question_id).first()
         if not obj:
             self.create(profile_id=profile_id, question_id=question_id, pos=pos)
@@ -144,18 +146,18 @@ class QuestionsLikesManager(models.Manager):
             return 0
         else:
             obj.pos = pos
-            obj.save()
+            obj.save(update_fields=['pos'])
             return pos + 1
 
 
 class AnswersLikesManager(models.Manager):
     def get_count(self, answer_id: int):
-        return self.filter(answer_id=answer_id).annotate(
-                like=Count("pos", filter=Q(pos=1)),
-                dis=Count("pos", filter=Q(pos=0))
-            ).first()
+        return self.filter(answer_id=answer_id).aggregate(
+                like=Count("id", filter=Q(pos=1)),
+                dis=Count("id", filter=Q(pos=0))
+            )
 
-    def add(self, profile_id: int, answer_id: int, pos: int):
+    def add_react(self, profile_id: int, answer_id: int, pos: int):
         obj = self.filter(profile_id=profile_id, answer_id=answer_id).first()
         if not obj:
             self.create(profile_id=profile_id, answer_id=answer_id, pos=pos)
@@ -165,5 +167,5 @@ class AnswersLikesManager(models.Manager):
             return 0
         else:
             obj.pos = pos
-            obj.save()
+            obj.save(update_fields=['pos'])
             return pos + 1
