@@ -1,7 +1,6 @@
 import json
-from datetime import timezone, datetime
+from datetime import datetime
 
-from bs4.diagnose import profile
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -29,7 +28,7 @@ def paginate(objects_list, request, per_page=10, pag_size=7):
 def index(request):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_listing(), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id if profile else -1))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -44,7 +43,7 @@ def index(request):
 def hot(request):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_hot(), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id if profile else -1))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -59,7 +58,7 @@ def hot(request):
 def tag(request, name):
     profile = Profile.objects.get_current(request.user)
     pagination = paginate(Question.objects.get_by_tag(name), request, 5)
-    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id))
+    pagination["page"].object_list = (Question.objects.full_listing(pagination["page"], profile.id if profile else -1))
     return render(request, 'index.html',
                   context={
                       "profile": profile,
@@ -73,9 +72,9 @@ def tag(request, name):
 
 def question(request, question_id):
     profile = Profile.objects.get_current(request.user)
-    quest = Question.objects.get_by_id(question_id, profile.id)
+    quest = Question.objects.get_by_id(question_id, profile.id if profile else -1)
     pagination = paginate(Answer.objects.get_by_question_id(question_id), request, 5)
-    pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"], profile.id))
+    pagination["page"].object_list = (Answer.objects.full_answers(pagination["page"], profile.id if profile else -1))
     print(pagination["page"].object_list[0].fase)
     if request.method == 'POST':
         form = AnswerForm(request.POST)
@@ -222,7 +221,7 @@ def settings(request):
 def questions_likes(request, question_id):
     data = json.loads(request.body)
     profile = Profile.objects.get_current(request.user)
-    fase = QuestionsLikes.objects.add(profile.id, question_id, data.get("pos"))
+    fase = QuestionsLikes.objects.add(profile.id if profile else -1, question_id, data.get("pos"))
     res = QuestionsLikes.objects.get_count(question_id)
     if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
     return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
@@ -231,7 +230,7 @@ def questions_likes(request, question_id):
 def answer_likes(request, answer_id):
     data = json.loads(request.body)
     profile = Profile.objects.get_current(request.user)
-    fase = AnswersLikes.objects.add(profile.id, answer_id, data.get("pos"))
+    fase = AnswersLikes.objects.add(profile.id if profile else -1, answer_id, data.get("pos"))
     res = AnswersLikes.objects.get_count(answer_id)
     if res is None: return JsonResponse({"likes": 0, "dislikes": 0, "fase": fase})
     return JsonResponse({"likes": res.like, "dislikes": res.dis, "fase": fase})
